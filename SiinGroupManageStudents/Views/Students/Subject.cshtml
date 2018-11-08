@@ -1,0 +1,30 @@
+﻿@model SiinGroupManageStudents.Models.Mark
+
+@{
+    ViewData["Title"] = "Create Subject and Mark";
+}
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
+            <form class="forms-sample" asp-action="Subject">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="SubjectName"></label>
+                    <input asp-for="SubjectName" class="form-control" placeholder="Enter SubjectName">
+                    <span asp-validation-for="SubjectName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SubjectMark"></label>
+                    <input asp-for="SubjectMark" class="form-control" placeholder="Enter SubjectMark">
+                </div>
+                <input type="hidden" asp-for="StudentRollNumber" value="@Model.StudentRollNumber" />
+                <button type="submit" class="btn btn-success mr-2">Save</button>
+                <button class="btn btn-light">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

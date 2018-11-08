@@ -1,52 +1,62 @@
 ﻿@model SiinGroupManageStudents.Models.Student
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Html.DisplayFor(model => model.FullName);
 }
-
+<br />
 <div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Html.DisplayFor(model => model.FullName)</td>
+                <td>@Html.DisplayFor(model => model.Email)</td>
+                <td>@Html.DisplayFor(model => model.Status)</td>
+            </tr>
+        </tbody>
+    </table>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UpdatedAt)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-    </dl>
-    <div>
-        <ul>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    Student
+                </th>
+                <th>
+                    SubjectName
+                </th>
+                <th>
+                    SubjectMark
+                </th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach (var mark in Model.Marks)
             {
-                <li>@mark.SubjectName - @mark.SubjectMark</li>
+                <tr>
+                    <td>@mark.StudentRollNumber</td>
+                    <td>@mark.SubjectName</td>
+                    <td>@mark.SubjectMark</td>
+                </tr>
             }
-        </ul>
-    </div>
+        </tbody>
+    </table>
+    <br />
+    <a asp-area="" asp-controller="Students" asp-action="Subject" asp-route-id="@Model.RollNumber" class="btn btn-success btn-block">
+        New Subject
+        <i class="mdi mdi-plus"></i>
+    </a>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.RollNumber">Edit</a>
-</div>
+<br />

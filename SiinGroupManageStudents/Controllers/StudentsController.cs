@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SiinGroupManageStudents.Models;
 
@@ -19,9 +16,19 @@ namespace SiinGroupManageStudents.Controllers
         }
 
         // GET: Students
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> ListStudent()
         {
             return View(await _context.Student.ToListAsync());
+        }
+
+        public async Task<IActionResult> ListSubject()
+        {
+            return View(await _context.Mark.ToListAsync());
         }
 
         // GET: Students/Details/5
@@ -29,14 +36,14 @@ namespace SiinGroupManageStudents.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error404));
             }
 
             var student = await _context.Student.Include(m => m.Marks)
                 .FirstOrDefaultAsync(m => m.RollNumber == id);
             if (student == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error404));
             }
 
             return View(student);
@@ -46,6 +53,41 @@ namespace SiinGroupManageStudents.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+
+        public IActionResult Error404()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Subject(string id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Error404));
+            }
+
+            var student = await _context.Student.FindAsync(id);
+            if (student == null)
+            {
+                return RedirectToAction(nameof(Error404));
+            }
+            var mark = new Mark();
+            mark.StudentRollNumber = id;
+            return View(mark);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Subject([Bind("SubjectName,SubjectMark,StudentRollNumber")] Mark mark)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(mark);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", mark.StudentRollNumber);
+            }
+            return View(mark);
         }
 
         // POST: Students/Create
@@ -59,7 +101,7 @@ namespace SiinGroupManageStudents.Controllers
             {
                 _context.Add(student);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListStudent));
             }
             return View(student);
         }
@@ -69,13 +111,13 @@ namespace SiinGroupManageStudents.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error404));
             }
 
             var student = await _context.Student.FindAsync(id);
             if (student == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error404));
             }
             return View(student);
         }
@@ -89,7 +131,7 @@ namespace SiinGroupManageStudents.Controllers
         {
             if (id != student.RollNumber)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error404));
             }
 
             if (ModelState.IsValid)
@@ -103,14 +145,14 @@ namespace SiinGroupManageStudents.Controllers
                 {
                     if (!StudentExists(student.RollNumber))
                     {
-                        return NotFound();
+                        return RedirectToAction(nameof(Error404));
                     }
                     else
                     {
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ListStudent));
             }
             return View(student);
         }
@@ -120,14 +162,14 @@ namespace SiinGroupManageStudents.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error404));
             }
 
             var student = await _context.Student
                 .FirstOrDefaultAsync(m => m.RollNumber == id);
             if (student == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error404));
             }
 
             return View(student);
@@ -135,13 +177,12 @@ namespace SiinGroupManageStudents.Controllers
 
         // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var student = await _context.Student.FindAsync(id);
             _context.Student.Remove(student);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ListStudent));
         }
 
         private bool StudentExists(string id)

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<SiinGroupManageStudents.Models.Student>
+
+@{
+    ViewData["Title"] = "List Student";
+}
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RollNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="@Html.DisplayFor(modelItem => item.RollNumber)">
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.RollNumber">@Html.DisplayFor(modelItem => item.RollNumber)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.RollNumber"><i class="fas fa-edit"></i></a> |
+                    <a href="javascript:deleteStudent('@item.RollNumber')"><i class="far fa-trash-alt"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
